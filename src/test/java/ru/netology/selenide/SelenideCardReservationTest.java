@@ -1,7 +1,6 @@
 package ru.netology.selenide;
 
 import com.codeborne.selenide.Condition;
-import com.codeborne.selenide.Selectors;
 import com.codeborne.selenide.Selenide;
 import org.junit.jupiter.api.Test;
 import org.openqa.selenium.Keys;
@@ -20,19 +19,20 @@ public class SelenideCardReservationTest {
     }
 
     @Test
-    public void shouldCompletedReservationCard () {
+    public void shouldCompletedReservationCard() {
 
-        String planningDate = generateDate(4,"dd.MM.yyyy");
+        String planningDate = generateDate(4, "dd.MM.yyyy");
 
         Selenide.open("http://localhost:9999");
         $("[data-test-id='city'] input").setValue("Салехард");
-        $("[data-test-id='date'] input").press(Keys.chord(Keys.SHIFT,Keys.HOME), Keys.DELETE)
+        $("[data-test-id='date'] input").press(Keys.chord(Keys.SHIFT, Keys.HOME), Keys.DELETE)
                 .setValue(planningDate);
         $("[data-test-id='name'] input").setValue("Чернов Владимир");
         $("[data-test-id='phone'] input").setValue("+71230000000");
         $("[data-test-id='agreement']").click();
         $("button.button").click();
-        $(Selectors.byText("Успешно!")).shouldBe(Condition.visible, Duration.ofSeconds(15));
-        $(Selectors.byText("Встреча успешно забронирована на " + planningDate));
+        $("[data-test-id='notification']").shouldBe(Condition.visible, Duration.ofSeconds(15));
+        $("[class='notification__title']").shouldHave(Condition.text("Успешно!"));
+        $("[class='notification__content']").shouldHave(Condition.text("Встреча успешно забронирована на " + planningDate));
     }
 }
